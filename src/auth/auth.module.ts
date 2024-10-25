@@ -1,24 +1,28 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { RegisterUserDto } from './dto/register-user.dto';
-import { User } from 'src/schemas/user.schema';
-import { LoginUserDto } from './dto/login-user.dto';
+import { AuthController } from './auth.controller';
+import { MongooseModule } from '@nestjs/mongoose';
+import { User, UserSchema } from 'src/schemas/user.schema';
+import { PassportModule } from '@nestjs/passport';
+import { JwtModule } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
-@Controller('auth')
-export class AuthController {
-  constructor(private authService: AuthService) {}
+@Module({
+  imports: [
+    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    PassportModule,
+    JwtModule.registerAsync({
+      useFactory: (configService: ConfigService) => {
+        return {
+          secret: configService.get<string>('JWT_SECRET_KEY'),
+          signOptions: { expiresIn: '1d' },
+        };
+      },
+      inject: [ConfigService],
+    }),
+  ],
 
-  @Get()
-  async getHello(): Promise<string> {
-    return 'Hello';
-  }
-  @Post('register')
-  async register(@Body() registerUserDto: RegisterUserDto): Promise<User> {
-    return this.authService.register(registerUserDto);
-  }
-
-  @Post('login')
-  async login(@Body() loginUserDto: LoginUserDto): Promise<{ token: string }> {
-    return this.authService.login(loginUserDto);
-  }
-}
+  providers: [AuthService],
+  controllers: [AuthController],
+})
+export class AuthModule {}
