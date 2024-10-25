@@ -14,11 +14,21 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, documentFactory);
 
   app.enableCors({
-    origin: ['http://localhost:3000'],
+    origin: [
+      'http://localhost:3000',
+      'http://example.com',
+      'http://www.example.com',
+      'http://app.example.com',
+      'https://example.com',
+      'https://www.example.com',
+      'https://app.example.com',
+    ],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
   });
-  await app.listen(8000);
-  console.log(`Application is running on: ${await app.getUrl()}`);
+  await app.listen(process.env.PORT || 8000);
+  console.log(
+    `Application is running on: ${await app.getUrl()}, port: ${process.env.PORT}, ${process.env.JWT_SECRET_KEY}`,
+  );
 }
 bootstrap();

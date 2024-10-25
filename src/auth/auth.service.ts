@@ -35,10 +35,16 @@ export class AuthService {
   }
   async validateUser(username: string, password: string): Promise<User> {
     const user = await this.userModel.findOne({ username }).exec();
-    if (user && (await bcrypt.compare(password, user.password))) {
-      return user;
+
+    if (!user) {
+      return null;
     }
-    return null;
+    const isMatchPassword = await bcrypt.compare(password, user.password);
+    if (!isMatchPassword) {
+      return null;
+    }
+
+    return user;
   }
 
   async login(loginUserDto: LoginUserDto): Promise<{ token: string }> {
@@ -48,7 +54,8 @@ export class AuthService {
       throw new Error('Invalid username or password');
     }
     const payload = { username: user.username, sub: user._id };
-    const token = this.jwtService.sign(payload);
-    return { token };
+    return {
+      token: this.jwtService.sign(payload),
+    };
   }
 }
