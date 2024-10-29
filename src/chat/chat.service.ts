@@ -1,9 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { Chat, ChatDocument } from 'src/schemas/chat.schema';
 import { CreateChatDto } from './dto/create-chat.dto';
 import { User, UserDocument } from 'src/schemas/user.schema';
+import { SendMessageDto } from './dto/send-message.dto';
+import { ChatModule } from './chat.module';
 
 @Injectable()
 export class ChatService {
@@ -30,5 +32,22 @@ export class ChatService {
       .populate('participants', 'username')
       .populate('messages.sender', 'username')
       .exec();
+  }
+  async sendMessage(
+    chatId: string,
+    userId: Types.ObjectId,
+    sendMessageDto: SendMessageDto,
+  ): Promise<Chat> {
+    const chat = await this.chatModel.findById(chatId).exec();
+    if (!chat) {
+      throw new Error('Chat not found');
+    }
+
+    chat.messages.push({
+      sender: userId,
+      content: sendMessageDto.content,
+      timestamp: new Date(),
+    });
+    return chat.save();
   }
 }

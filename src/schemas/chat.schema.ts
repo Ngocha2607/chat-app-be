@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Types } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
 export type ChatDocument = Chat & Document;
 
@@ -16,7 +16,19 @@ export class Chat {
   })
   participants: Types.ObjectId[];
 
-  @Prop({ type: [{ type: Object }] })
+  @Prop({
+    type: [
+      {
+        sender: {
+          type: Types.ObjectId,
+          ref: 'User',
+        },
+        content: String,
+        timestamp: Date,
+      },
+    ],
+    default: [],
+  })
   messages: { sender: Types.ObjectId; content: string; timestamp: Date }[];
 }
 
