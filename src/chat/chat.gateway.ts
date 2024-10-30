@@ -11,7 +11,13 @@ import { ChatService } from './chat.service';
 import { Types } from 'mongoose';
 import { SendMessageDto } from './dto/send-message.dto';
 
-@WebSocketGateway()
+@WebSocketGateway({
+  cors: {
+    origin: '*',
+    credentials: true,
+  },
+  transports: ['websocket', 'polling'],
+})
 export class ChatGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {

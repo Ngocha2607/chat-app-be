@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Types } from 'mongoose';
+import { Document, Types, Schema as MongooseSchema } from 'mongoose';
 
 export type ChatDocument = Chat & Document;
 
@@ -8,7 +8,7 @@ export class Chat {
   @Prop({
     type: [
       {
-        type: Types.ObjectId,
+        type: MongooseSchema.Types.ObjectId,
         ref: 'User',
       },
     ],
@@ -20,7 +20,7 @@ export class Chat {
     type: [
       {
         sender: {
-          type: Types.ObjectId,
+          type: MongooseSchema.Types.ObjectId,
           ref: 'User',
         },
         content: String,
