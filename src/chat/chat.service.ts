@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException  } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { Chat, ChatDocument } from 'src/schemas/chat.schema';
@@ -40,7 +40,7 @@ export class ChatService {
   ): Promise<Chat> {
     const chat = await this.chatModel.findById(chatId).exec();
     if (!chat) {
-      throw new Error('Chat not found');
+      throw new NotFoundException('Chat not found');
     }
 
     chat.messages.push({
