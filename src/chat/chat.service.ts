@@ -49,6 +49,11 @@ export class ChatService {
       timestamp: new Date(),
     });
 
-    return chat.save();
+    await chat.save();
+    return await this.chatModel
+      .findById(chatId)
+      .populate('participants', 'username')
+      .populate('messages.sender', 'username')
+      .exec();
   }
 }
