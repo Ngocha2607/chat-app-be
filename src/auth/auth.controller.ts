@@ -10,7 +10,7 @@ import {
 import { AuthService } from './auth.service';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { User } from 'src/schemas/user.schema';
-import { LoginUserDto } from './dto/login-user.dto';
+import { AuthResponseDto, LoginUserDto } from './dto/login-user.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { UserProfileDto } from './dto/user-profile.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -28,9 +28,7 @@ export class AuthController {
     return this.authService.register(registerUserDto);
   }
   @Post('login')
-  async login(
-    @Body() loginUserDto: RegisterUserDto,
-  ): Promise<{ token: string }> {
+  async login(@Body() loginUserDto: RegisterUserDto): Promise<AuthResponseDto> {
     return this.authService.login(loginUserDto);
   }
 

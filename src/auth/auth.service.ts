@@ -5,7 +5,7 @@ import { User, UserDocument } from 'src/schemas/user.schema';
 import { RegisterUserDto } from './dto/register-user.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { LoginUserDto } from './dto/login-user.dto';
+import { AuthResponseDto, LoginUserDto } from './dto/login-user.dto';
 import { UserProfileDto } from './dto/user-profile.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
@@ -49,7 +49,7 @@ export class AuthService {
     return user;
   }
 
-  async login(loginUserDto: LoginUserDto): Promise<{ token: string }> {
+  async login(loginUserDto: LoginUserDto): Promise<AuthResponseDto> {
     const { username, password } = loginUserDto;
     const user = await this.validateUser(username, password);
     if (!user) {
@@ -58,6 +58,10 @@ export class AuthService {
     const payload = { username: user.username, sub: user._id };
     return {
       token: this.jwtService.sign(payload),
+      user: {
+        _id: user._id,
+        username: user.username,
+      },
     };
   }
 
@@ -67,6 +71,7 @@ export class AuthService {
       throw new Error('User not found');
     }
     return {
+      _id: user._id,
       username: user.username,
     };
   }

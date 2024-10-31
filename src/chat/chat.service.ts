@@ -48,6 +48,7 @@ export class ChatService {
       content: sendMessageDto.content,
       timestamp: new Date(),
     });
+
     return chat.save();
   }
 }
