@@ -40,6 +40,11 @@ export class AuthController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Get('list')
+  async getListUsers(): Promise<UserProfileDto[]> {
+    return this.authService.getListUsers();
+  }
+  @UseGuards(JwtAuthGuard)
   @Put('update')
   async updateProfile(
     @Request() req,

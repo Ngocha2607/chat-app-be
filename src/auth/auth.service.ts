@@ -76,6 +76,9 @@ export class AuthService {
     };
   }
 
+  async getListUsers(): Promise<UserProfileDto[]> {
+    return this.userModel.find().exec();
+  }
   async updateUser(id: string, updateUserDto: UpdateUserDto): Promise<User> {
     const user = await this.userModel.findById(id).exec();
     if (!user) {
