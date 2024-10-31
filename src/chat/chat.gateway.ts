@@ -10,7 +10,6 @@ import { Server, Socket } from 'socket.io';
 import { ChatService } from './chat.service';
 import { Types } from 'mongoose';
 import { SendMessageDto } from './dto/send-message.dto';
-import { AuthService } from 'src/auth/auth.service';
 
 @WebSocketGateway({
   cors: {
@@ -23,10 +22,7 @@ export class ChatGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
   @WebSocketServer() server: Server;
-  constructor(
-    private readonly chatService: ChatService,
-    private readonly authService: AuthService,
-  ) {}
+  constructor(private readonly chatService: ChatService) {}
 
   afterInit(server: Server) {
     console.log('ChatGateway initialized');
@@ -51,8 +47,6 @@ export class ChatGateway
       payload.userId,
       message,
     );
-
-    console.log(chat, 'qwqw');
     this.server.to(payload.chatId).emit('receiveMessage', chat);
   }
 
