@@ -24,6 +24,7 @@ export class ChatService {
     return this.chatModel
       .find({ participants: userId })
       .populate('participants', 'username')
+      .populate('messages.sender', 'username')
       .exec();
   }
   async getChatDetails(chatId: string): Promise<Chat> {
