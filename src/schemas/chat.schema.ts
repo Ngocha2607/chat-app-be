@@ -30,6 +30,12 @@ export class Chat {
     default: [],
   })
   messages: { sender: Types.ObjectId; content: string; timestamp: Date }[];
+
+  @Prop({
+    type: [{ type: MongooseSchema.Types.ObjectId, ref: 'File' }],
+    default: [],
+  })
+  files: Types.ObjectId[];
 }
 
 export const ChatSchema = SchemaFactory.createForClass(Chat);

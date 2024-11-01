@@ -3,6 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { ChatModule } from './chat/chat.module';
+import { FileService } from './file/file.service';
 import configuration from './config/configuration';
 
 @Module({
@@ -16,5 +17,6 @@ import configuration from './config/configuration';
     AuthModule,
     ChatModule,
   ],
+  providers: [FileService],
 })
 export class AppModule {}
